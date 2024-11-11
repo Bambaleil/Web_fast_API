@@ -7,9 +7,13 @@ class SexEnum(str, Enum):
     female: str = "женский"
 
 
-class UserModel(BaseModel):
+class ClientsModelAdd(BaseModel):
     name: str
     surname: str
     sex: SexEnum
     email: EmailStr
     avatar: bytes
+
+
+class ClientsModel(ClientsModelAdd):
+    id: int

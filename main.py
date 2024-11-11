@@ -1,10 +1,6 @@
 from fastapi import FastAPI
-
-from models.usermodel import UserModel
+from routers.clients import router as clients_router
 
 app = FastAPI()
 
-
-@app.post("/user/")
-async def create_user(user: UserModel) -> UserModel:
-    return user
+app.include_router(clients_router)
