@@ -13,6 +13,11 @@ project_root = Path(__file__).resolve().parents[2]
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 
+class SexEnum(str, Enum):
+    male = "мужской"
+    female = "женский"
+
+
 def get_project_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
@@ -20,12 +25,6 @@ def get_project_root() -> Path:
 def get_image(img_name: str) -> Optional[Path]:
     img_path: Path = get_project_root() / "img" / img_name
     return None if not img_path.is_file() else img_path
-
-
-def hash_password(password: str) -> str:
-    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-    password_hash: str = pwd_context.hash(password)
-    return password_hash
 
 
 async def add_watermark_with_photo(avatar: Optional[bytes] = None,
