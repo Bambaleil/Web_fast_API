@@ -22,7 +22,8 @@ async def get_client_by_email(*, session: Session, email: str) -> Optional[Clien
     return session_client
 
 
-async def get_like_between_clients(*, session: Session, liker_id: uuid.UUID, liked_id: uuid.UUID) -> Optional[Like]:
-    statement: select = select(Like).where(Like.liker_id == liker_id and Like.liked_id == liked_id)
-    session_like: Optional[Like] = session.exec(statement).first()
-    return session_like
+async def check_existing_like(*, session: Session, liker_id: uuid.UUID, liked_id: uuid.UUID) -> Optional[Like]:
+    statement = select(Like).where((Like.liker_id == liker_id) & (Like.liked_id == liked_id))
+    existing_like: Optional[Like] = session.exec(statement).first()
+    return existing_like
+
