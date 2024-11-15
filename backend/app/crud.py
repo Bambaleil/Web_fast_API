@@ -27,3 +27,25 @@ async def check_existing_like(*, session: Session, liker_id: uuid.UUID, liked_id
     existing_like: Optional[Like] = session.exec(statement).first()
     return existing_like
 
+
+async def create_like(*, session: Session, liker_id: uuid.UUID, liked_id: uuid.UUID) -> Like:
+    db_obj = Like(
+        liker_id=liker_id,
+        liked_id=liked_id
+    )
+    session.add(db_obj)
+    session.commit()
+    session.refresh(db_obj)
+    return db_obj
+
+
+async def check_match_between(*, session: Session, liker_id: uuid.UUID, liked_id: uuid.UUID) -> Optional[Like]:
+    statement: select = select(Like).where((liker_id == liked_id) & (liked_id == liker_id))
+    db_obj: Optional[Like] = session.exec(statement).first()
+    return db_obj
+
+
+async def update_match_user(*, session: Session, db_obj: Like) -> None:
+    db_obj.match = True
+    session.add(db_obj)
+    session.commit()
