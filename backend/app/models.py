@@ -21,7 +21,7 @@ class ClientCreate(ClientBase):
     password: str = Field(min_length=8, max_length=40)
 
 
-class ClientLike(SQLModel):
+class CreateLike(SQLModel):
     liker_id: uuid.UUID
     liked_id: uuid.UUID
 
