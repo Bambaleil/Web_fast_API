@@ -42,3 +42,7 @@ class Client(ClientBase, table=True):
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
     hashed_password: str
     avatar: Optional[bytes] = Field(default=None)
+
+
+class ClientPublic(ClientBase):
+    id: uuid.UUID
