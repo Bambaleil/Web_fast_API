@@ -17,13 +17,14 @@ class ClientBase(SQLModel):
     is_superuser: bool = False
 
 
-class ClientCreate(ClientBase):
-    password: str = Field(min_length=8, max_length=40)
-
-
-class CreateLike(SQLModel):
+class LikeBase(SQLModel):
     liker_id: uuid.UUID
     liked_id: uuid.UUID
+    match: bool = False
+
+
+class ClientCreate(ClientBase):
+    password: str = Field(min_length=8, max_length=40)
 
 
 class ClientRegister(ClientBase):
@@ -56,7 +57,7 @@ class Like(SQLModel, table=True):
     match: bool = False
 
 
-class LikePublic(Like):
+class LikePublic(LikeBase):
     pass
 
 
