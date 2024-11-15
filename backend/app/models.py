@@ -21,6 +21,11 @@ class ClientCreate(ClientBase):
     password: str = Field(min_length=8, max_length=40)
 
 
+class ClientLike(SQLModel):
+    liker_id: uuid.UUID
+    liked_id: uuid.UUID
+
+
 class ClientRegister(ClientBase):
     avatar: UploadFile = Field()
 
@@ -44,5 +49,20 @@ class Client(ClientBase, table=True):
     avatar: Optional[bytes] = Field(default=None)
 
 
+class Like(SQLModel, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    liker_id: uuid.UUID
+    liked_id: uuid.UUID
+    match: bool = False
+
+
+class LikePublic(Like):
+    pass
+
+
 class ClientPublic(ClientBase):
     id: uuid.UUID
+
+
+class TokenPayload(SQLModel):
+    sub: str | None = None
