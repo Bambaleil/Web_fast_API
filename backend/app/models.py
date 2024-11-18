@@ -23,6 +23,12 @@ class LikeBase(SQLModel):
     match: bool = False
 
 
+class FilterClient(SQLModel):
+    sex: Optional[SexEnum] = Field(default=None)
+    name: Optional[str] = Field(default=None, max_length=55)
+    surname: Optional[str] = Field(default=None, max_length=55)
+
+
 class ClientCreate(ClientBase):
     password: str = Field(min_length=8, max_length=40)
 
