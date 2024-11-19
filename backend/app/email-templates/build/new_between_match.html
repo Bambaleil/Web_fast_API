@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ project_name }} - New Match Notification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            text-align: center;
+            border-bottom: 1px solid #eeeeee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .content {
+            line-height: 1.6;
+        }
+        .footer {
+            text-align: center;
+            border-top: 1px solid #eeeeee;
+            padding-top: 10px;
+            margin-top: 20px;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin: 20px 0;
+            font-size: 16px;
+            color: #ffffff;
+            background-color: #4CAF50;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>{{ project_name }}</h1>
+        </div>
+        <div class="content">
+            <p>Dear {{ username }},</p>
+            <p>We are excited to inform you that a new match has been found between you on {{ project_name }}!</p>
+            <p>Here are your details:</p>
+            <ul>
+                <li><strong>{{ username_2 }}</strong> - {{ email_2 }}</li>
+            </ul>
+            <p>Feel free to reach out to each other and start a conversation.</p>
+            <p><a href="{{ project_url }}" class="button">Visit {{ project_name }}</a></p>
+        </div>
+        <div class="footer">
+            <p>&copy; {{ year }} {{ project_name }}. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
