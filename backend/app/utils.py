@@ -2,6 +2,7 @@ import logging
 from dataclasses import dataclass
 from enum import Enum
 from io import BytesIO
+from math import radians, sin, cos, sqrt, atan2
 from pathlib import Path
 from typing import Optional, Any, Tuple
 
@@ -14,6 +15,7 @@ from jinja2 import Template
 from .core.config import settings
 
 project_root = Path(__file__).resolve().parents[2]
+path_image = Path(project_root, r"img\default_avatar.jpeg")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
@@ -24,6 +26,7 @@ logger = logging.getLogger(__name__)
 class SexEnum(str, Enum):
     male = "мужской"
     female = "женский"
+
 
 @dataclass
 class EmailData:
@@ -104,7 +107,7 @@ def get_image(img_name: str) -> Optional[Path]:
     return None if not img_path.is_file() else img_path
 
 
-async def add_watermark_with_photo(avatar: Optional[bytes] = None,
+async def add_watermark_with_photo(avatar: bytes,
                                    watermark_path: Optional[str] = None,
                                    opacity: float = 0.1) -> bytes:
     if watermark_path is None:
@@ -112,6 +115,7 @@ async def add_watermark_with_photo(avatar: Optional[bytes] = None,
 
     async with aiofiles.open(watermark_path, "rb") as f:
         watermark_bytes = await f.read()
+
     watermark = Image.open(BytesIO(watermark_bytes)).convert("RGBA")
     avatar_image = Image.open(BytesIO(avatar)).convert("RGBA")
 
@@ -125,5 +129,15 @@ async def add_watermark_with_photo(avatar: Optional[bytes] = None,
     output = BytesIO()
     avatar_image.save(output, format="PNG")
     result_image = output.getvalue()
-
     return result_image
+
+
+def great_circle_distance(lat1, lon1, lat2, lon2):
+    R = 6371.0
+    lat1, lon1, lat2, lon2 = map(radians, [lat1, lon1, lat2, lon2])
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
+    a = sin(dlat / 2) ** 2 + cos(lat1) * cos(lat2) * sin(dlon / 2) ** 2
+    c = 2 * atan2(sqrt(a), sqrt(1 - a))
+    distance = R * c
+    return distance
