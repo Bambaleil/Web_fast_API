@@ -4,10 +4,10 @@ from typing import Optional, Sequence
 from fastapi import HTTPException, APIRouter
 from fastapi import BackgroundTasks
 from ..deps import SessionDep
-from ... import crud
-from ...crud import check_existing_like, check_match_between, update_match_user, find_like_client
 from ...models import Client, Like, LikePublic
 from ...utils import generate_match_email, send_email
+
+from ... import crud
 
 router = APIRouter()
 
@@ -55,20 +55,20 @@ async def like_client(liker_id: uuid.UUID, liked_id: uuid.UUID, session: Session
             status_code=400,
             detail="The liked user with this ID does not exist in the system.",
         )
-    like: Optional[Like] = await check_existing_like(session=session,
-                                                     liker_id=liker_id,
-                                                     liked_id=liked_id)
+    like: Optional[Like] = await crud.check_existing_like(session=session,
+                                                          liker_id=liker_id,
+                                                          liked_id=liked_id)
 
     if like:
         raise HTTPException(status_code=400,
                             detail="This like already exists in the system.")
 
     like: Like = await crud.create_like(session=session, liker_id=liker_id, liked_id=liked_id)
-    list_liked: Sequence[Optional[Like]] = await find_like_client(session=session, liked_id=liked_id)
+    list_liked: Sequence[Optional[Like]] = await crud.find_like_client(session=session, liked_id=liked_id)
     if list_liked:
-        match: Optional[Like] = await check_match_between(liker_id=liker_id, list_liked=list_liked)
+        match: Optional[Like] = await crud.check_match_between(liker_id=liker_id, list_liked=list_liked)
         if match:
-            await update_match_user(liker_obj=like, liked_obj=match, session=session)
+            await crud.update_match_user(liker_obj=like, liked_obj=match, session=session)
             (email_data_1, email_data_2) = await generate_match_email(liker_obj=db_liker, liked_obj=db_liked)
             background_tasks.add_task(send_email, email_to=db_liker.email, subject=email_data_1.subject,
                                       html_content=email_data_1.html_content)
