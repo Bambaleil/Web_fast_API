@@ -15,7 +15,6 @@ from jinja2 import Template
 from .core.config import settings
 
 project_root = Path(__file__).resolve().parents[2]
-path_image = Path(project_root, r"img\default_avatar.jpeg")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
