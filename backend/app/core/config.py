@@ -1,15 +1,16 @@
 import secrets
 import warnings
-from typing import Literal, Any, Annotated
+from typing import Annotated, Any, Literal
 
 from aiocache import caches
 from pydantic import (
     AnyUrl,
     BeforeValidator,
+    EmailStr,
     HttpUrl,
     PostgresDsn,
     computed_field,
-    model_validator, EmailStr,
+    model_validator,
 )
 from pydantic_core import MultiHostUrl
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -26,9 +27,7 @@ def parse_cors(v: Any) -> list[str] | str:
 
 class Settings(BaseSettings):
     model_config = SettingsConfigDict(
-        env_file=".env",
-        env_ignore_empty=True,
-        extra="ignore"
+        env_file=".env", env_ignore_empty=True, extra="ignore"
     )
 
     API_V1_STR: str = "/api/v1"
@@ -37,16 +36,16 @@ class Settings(BaseSettings):
     FRONTEND_HOST: str = "http://localhost:5173"
     ENVIRONMENT: Literal["local", "staging", "production"] = "local"
 
-    BACKEND_CORS_ORIGINS: Annotated[
-        list[AnyUrl] | str, BeforeValidator(parse_cors)
-    ] = []
+    BACKEND_CORS_ORIGINS: Annotated[list[AnyUrl] | str, BeforeValidator(parse_cors)] = (
+        []
+    )
 
     @computed_field
     @property
     def all_cors_origins(self) -> list[str]:
-        return ([str(origin).rstrip("/")
-                for origin in self.BACKEND_CORS_ORIGINS] +
-                [self.FRONTEND_HOST])
+        return [str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS] + [
+            self.FRONTEND_HOST
+        ]
 
     PROJECT_NAME: str
     SENTRY_DSN: HttpUrl | None = None
@@ -116,15 +115,15 @@ class Settings(BaseSettings):
         return self
 
 
-caches.set_config({
-    'default': {
-        'cache': "aiocache.SimpleMemoryCache",
-        'ttl': 600,
-        'serializer': {
-            'class': "aiocache.serializers.JsonSerializer"
-        },
-        'plugins': []
+caches.set_config(
+    {
+        "default": {
+            "cache": "aiocache.SimpleMemoryCache",
+            "ttl": 600,
+            "serializer": {"class": "aiocache.serializers.JsonSerializer"},
+            "plugins": [],
+        }
     }
-})
+)
 
 settings = Settings()

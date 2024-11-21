@@ -2,15 +2,15 @@ import logging
 from dataclasses import dataclass
 from enum import Enum
 from io import BytesIO
-from math import radians, sin, cos, sqrt, atan2
+from math import atan2, cos, radians, sin, sqrt
 from pathlib import Path
-from typing import Optional, Any, Tuple
+from typing import Any, Optional, Tuple
 
 import aiofiles
 import emails
-from PIL import Image, ImageEnhance
 from fastapi.security import OAuth2PasswordBearer
 from jinja2 import Template
+from PIL import Image, ImageEnhance
 
 from .core.config import settings
 
@@ -33,24 +33,21 @@ class EmailData:
     subject: str
 
 
-async def render_email_template(*,
-                                template_name: str,
-                                context: dict[str, Any]) -> str:
+async def render_email_template(*, template_name: str, context: dict[str, Any]) -> str:
     template_str = (
-            Path(__file__).parent / "email-templates" / "build" / template_name
+        Path(__file__).parent / "email-templates" / "build" / template_name
     ).read_text()
     html_content = Template(template_str).render(context)
     return html_content
 
 
 async def send_email(
-        *,
-        email_to: str,
-        subject: str = "",
-        html_content: str = "",
+    *,
+    email_to: str,
+    subject: str = "",
+    html_content: str = "",
 ) -> None:
-    assert settings.emails_enabled, \
-        "no provided configuration for email variables"
+    assert settings.emails_enabled, "no provided configuration for email variables"
     message = emails.Message(
         subject=subject,
         html=html_content,
@@ -71,14 +68,13 @@ async def send_email(
         logger.error(
             f"Failed to send email."
             f" Status code: {response.status_code},"
-            f" Status text: {response.status_text}")
+            f" Status text: {response.status_text}"
+        )
     else:
-        logger.info(f"Email sent successfully!"
-                    f" Status code: {response.status_code}")
+        logger.info(f"Email sent successfully!" f" Status code: {response.status_code}")
 
 
-async def generate_match_email(liker_obj,
-                               liked_obj) -> Tuple[EmailData, EmailData]:
+async def generate_match_email(liker_obj, liked_obj) -> Tuple[EmailData, EmailData]:
     project_name = settings.PROJECT_NAME
     subject = f"{project_name} - New match between clients."
     html_content_1 = await render_email_template(
@@ -88,7 +84,7 @@ async def generate_match_email(liker_obj,
             "username": liker_obj.name,
             "username_2": liked_obj.name,
             "email_2": liked_obj.email,
-        }
+        },
     )
 
     html_content_2 = await render_email_template(
@@ -98,10 +94,12 @@ async def generate_match_email(liker_obj,
             "username": liked_obj.name,
             "username_2": liker_obj.name,
             "email_2": liker_obj.email,
-        }
+        },
     )
-    return (EmailData(html_content=html_content_1, subject=subject),
-            EmailData(html_content=html_content_2, subject=subject))
+    return (
+        EmailData(html_content=html_content_1, subject=subject),
+        EmailData(html_content=html_content_2, subject=subject),
+    )
 
 
 def get_project_root() -> Path:
@@ -113,9 +111,9 @@ def get_image(img_name: str) -> Optional[Path]:
     return None if not img_path.is_file() else img_path
 
 
-async def add_watermark_with_photo(avatar: bytes,
-                                   watermark_path: Optional[str] = None,
-                                   opacity: float = 0.1) -> bytes:
+async def add_watermark_with_photo(
+    avatar: bytes, watermark_path: Optional[str] = None, opacity: float = 0.1
+) -> bytes:
     if watermark_path is None:
         watermark_path = get_image("watermark.jpg")
 

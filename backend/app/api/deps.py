@@ -1,4 +1,4 @@
-from typing import Generator, Annotated, Type
+from typing import Annotated, Generator, Type
 
 import jwt
 from fastapi import Depends, HTTPException, status

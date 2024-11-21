@@ -3,7 +3,7 @@ from typing import Optional
 
 from fastapi import UploadFile
 from pydantic import EmailStr
-from sqlmodel import SQLModel, Field
+from sqlmodel import Field, SQLModel
 
 from .utils import SexEnum
 
