@@ -1,6 +1,8 @@
 import secrets
 import warnings
 from typing import Literal, Any, Annotated
+
+from aiocache import caches
 from pydantic import (
     AnyUrl,
     BeforeValidator,
@@ -10,7 +12,6 @@ from pydantic import (
     model_validator, EmailStr,
 )
 from pydantic_core import MultiHostUrl
-
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from typing_extensions import Self
 
@@ -113,6 +114,17 @@ class Settings(BaseSettings):
         )
 
         return self
+
+caches.set_config({
+    'default': {
+        'cache': "aiocache.SimpleMemoryCache",
+        'ttl': 600,
+        'serializer': {
+            'class': "aiocache.serializers.JsonSerializer"
+        },
+        'plugins': []
+    }
+})
 
 
 settings = Settings()
