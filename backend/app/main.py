@@ -15,7 +15,7 @@ app = FastAPI(
     generate_unique_id_function=custom_generate_unique_id,
 )
 
-app.include_router(api_router, prefix=settings.API_V1_STR)  # settings.API_V1_STR
+app.include_router(api_router, prefix=settings.API_V1_STR)
 
 if __name__ == '__main__':
     import uvicorn

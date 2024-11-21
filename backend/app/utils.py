@@ -33,7 +33,9 @@ class EmailData:
     subject: str
 
 
-async def render_email_template(*, template_name: str, context: dict[str, Any]) -> str:
+async def render_email_template(*,
+                                template_name: str,
+                                context: dict[str, Any]) -> str:
     template_str = (
             Path(__file__).parent / "email-templates" / "build" / template_name
     ).read_text()
@@ -47,7 +49,8 @@ async def send_email(
         subject: str = "",
         html_content: str = "",
 ) -> None:
-    assert settings.emails_enabled, "no provided configuration for email variables"
+    assert settings.emails_enabled, \
+        "no provided configuration for email variables"
     message = emails.Message(
         subject=subject,
         html=html_content,
@@ -66,12 +69,16 @@ async def send_email(
     logger.info(f"send email result: {response}")
     if response.status_code is None or response.status_code != 250:
         logger.error(
-            f"Failed to send email. Status code: {response.status_code}, Status text: {response.status_text}")
+            f"Failed to send email."
+            f" Status code: {response.status_code},"
+            f" Status text: {response.status_text}")
     else:
-        logger.info(f"Email sent successfully! Status code: {response.status_code}")
+        logger.info(f"Email sent successfully!"
+                    f" Status code: {response.status_code}")
 
 
-async def generate_match_email(liker_obj, liked_obj) -> Tuple[EmailData, EmailData]:
+async def generate_match_email(liker_obj,
+                               liked_obj) -> Tuple[EmailData, EmailData]:
     project_name = settings.PROJECT_NAME
     subject = f"{project_name} - New match between clients."
     html_content_1 = await render_email_template(

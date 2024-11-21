@@ -1,7 +1,7 @@
 from typing import Generator, Annotated, Type
 
 import jwt
-from fastapi import Depends, HTTPException, status, UploadFile
+from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from jwt.exceptions import InvalidTokenError
 from pydantic import ValidationError
