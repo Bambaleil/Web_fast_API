@@ -1,0 +1,68 @@
+[project]
+name = "app"
+version = "0.1.0"
+description = ""
+requires-python = ">=3.10,<4.0"
+dependencies = [
+    "fastapi[standard]<1.0.0,>=0.112.2",
+    "python-multipart<1.0.0,>=0.0.7",
+    "email-validator<3.0.0,>=2.1.0.post1",
+    "passlib[bcrypt]<2.0.0,>=1.7.4",
+    "pydantic>2.0,<=2.9.2",
+    "emails<1.0,>=0.6",
+    "jinja2<4.0.0,>=3.1.4",
+    "alembic<2.0.0,>=1.14.0",
+    "sqlmodel<1.0.0,>=0.0.22",
+    "bcrypt==4.0.1",
+    "pydantic-settings<3.0.0,>=2.2.1",
+    "pyjwt<3.0.0,>=2.8.0",
+    "aiocache~=0.12.3",
+    "aiofiles~=24.1.0",
+    "httpx<1.0.0,>=0.25.1",
+    "SQLAlchemy~=2.0.36",
+    "pydantic_core~=2.23.4",
+    "typing_extensions~=4.12.2",
+    "pillow~=11.0.0",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv]
+dev-dependencies = [
+    "pytest<8.0.0,>=7.4.3",
+    "mypy<2.0.0,>=1.8.0",
+    "ruff<1.0.0,>=0.2.2",
+    "pre-commit<4.0.0,>=3.6.2",
+    "coverage<8.0.0,>=7.4.3",
+]
+
+[tool.mypy]
+strict = true
+exclude = ["venv", ".venv", "alembic"]
+
+[tool.ruff]
+target-version = "py310"
+exclude = ["alembic"]
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "W",
+    "F",
+    "I",
+    "B",
+    "C4",
+    "UP",
+    "ARG001",
+]
+ignore = [
+    "E501",
+    "B008",
+    "W191",
+    "B904",
+]
+
+[tool.ruff.lint.pyupgrade]
+keep-runtime-typing = true
