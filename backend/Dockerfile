@@ -4,7 +4,7 @@ ENV PYTHONUNBUFFERED=1
 
 WORKDIR /app/
 
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
 ENV PATH="/app/.venv/bin:$PATH"
 ENV UV_COMPILE_BYTECODE=1
@@ -22,4 +22,4 @@ COPY ./app /app/app
 RUN --mount=type=cache,target=/root/.cache/uv \
     uv sync
 
-CMD ["/app/.venv/bin/uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["fastapi", "run", "--workers", "4", "app/main.py"]
